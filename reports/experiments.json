@@ -1,0 +1,29 @@
+{
+  "environment": "offline_SQLite_only",
+  "all_passed": true,
+  "total": 4,
+  "experiments": [
+    {
+      "name": "E1_late_arrival_knowledge_cutoff",
+      "passed": true,
+      "original": "APPROVE",
+      "counterfactual": "BLOCK"
+    },
+    {
+      "name": "E2_retrospective_correction",
+      "passed": true,
+      "after_correction": "APPROVE",
+      "original_proof_still_valid": true
+    },
+    {
+      "name": "E3_missing_causal_parent",
+      "passed": true,
+      "fail_closed": true
+    },
+    {
+      "name": "E4_backdated_record_detected",
+      "passed": true,
+      "proof_verified_after_backdating": false
+    }
+  ]
+}

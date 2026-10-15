@@ -1,0 +1,7 @@
+{
+  "backend": "local_sqlite_only",
+  "accounts": 100,
+  "append_seconds": 0.014126,
+  "evaluate_seconds": 0.005353,
+  "total_seconds": 0.019479
+}

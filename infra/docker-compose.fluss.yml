@@ -1,0 +1,91 @@
+# Fluss 1.0 + Flink 1.20 based on upstream quickstart.
+# Local research only, NOT hardened or HA. Fluss records are persisted in a named volume.
+services:
+  zookeeper:
+    image: zookeeper:3.9.2
+    restart: unless-stopped
+
+  coordinator-server:
+    image: apache/fluss:1.0.0
+    command: coordinatorServer
+    depends_on:
+      - zookeeper
+    environment:
+      - |
+        FLUSS_PROPERTIES=
+        zookeeper.address: zookeeper:2181
+        bind.listeners: FLUSS://coordinator-server:9123
+        remote.data.dir: /tmp/fluss/remote
+    volumes:
+      - fluss-remote-data:/tmp/fluss/remote
+
+  tablet-server:
+    image: apache/fluss:1.0.0
+    command: tabletServer
+    depends_on:
+      - coordinator-server
+    environment:
+      - |
+        FLUSS_PROPERTIES=
+        zookeeper.address: zookeeper:2181
+        bind.listeners: FLUSS://tablet-server:9123
+        data.dir: /tmp/fluss/data
+        remote.data.dir: /tmp/fluss/remote
+    volumes:
+      - fluss-remote-data:/tmp/fluss/remote
+      - fluss-tablet-data:/tmp/fluss/data
+
+  jobmanager:
+    image: apache/fluss-quickstart-flink:1.20-1.0.0
+    command: jobmanager
+    ports:
+      - "127.0.0.1:8083:8081"
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager
+
+  taskmanager:
+    image: apache/fluss-quickstart-flink:1.20-1.0.0
+    command: taskmanager
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        taskmanager.memory.process.size: 2048m
+
+  sql-client:
+    image: apache/fluss-quickstart-flink:1.20-1.0.0
+    command: ["/opt/flink/bin/sql-client.sh"]
+    depends_on:
+      - jobmanager
+    profiles: ["tools"]
+    stdin_open: true
+    tty: true
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager
+
+  bridge:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.bridge
+    environment:
+      FLUSS_BOOTSTRAP: coordinator-server:9123
+    depends_on:
+      - tablet-server
+    volumes:
+      - ../.data:/work/.data
+      - ../reports:/work/reports
+    profiles: ["tools"]
+    command: ["--db", "/work/.data/causal.sqlite3", "bridge-fluss"]
+
+volumes:
+  fluss-remote-data:
+  fluss-tablet-data:

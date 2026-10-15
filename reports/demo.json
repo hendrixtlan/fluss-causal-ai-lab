@@ -1,0 +1,93 @@
+{
+  "decision": {
+    "decision_id": "decision-synthetic-001",
+    "account_id": "acct-synthetic-001",
+    "valid_at": "2026-10-14T10:32:15.000000Z",
+    "knowledge_at": "2026-10-14T10:32:15.000000Z",
+    "policy": {
+      "version": "risk-v1",
+      "block_at": 70,
+      "review_amount_mxn": 100000
+    },
+    "result": {
+      "outcome": "APPROVE",
+      "reason": "within_policy",
+      "risk_score": 15,
+      "amount_mxn": 85000,
+      "transaction_event_id": "tx-001",
+      "causal_gaps": [],
+      "active_event_ids": [
+        "profile-001",
+        "tx-001"
+      ]
+    },
+    "manifest": {
+      "event_hashes": [
+        {
+          "event_id": "profile-001",
+          "sha256": "af6931de24d6c91e5b17fa54ef9b43c07e88cc27c68508925f852bab6b3356e9"
+        },
+        {
+          "event_id": "tx-001",
+          "sha256": "6e70e03d508549f6a59c5c1a61e35c4a702890ba8381657b2af27335b51abf26"
+        }
+      ],
+      "local_sequence_high_watermarks": {
+        "customer_profile": 1,
+        "payments_cdc": 2
+      },
+      "policy_sha256": "5f1b98bcaf2bc4460cadc945ddb1b6882150cdf313b71230ffbd08118fbedf79"
+    },
+    "evidence_hash": "ca41edcbdc4c571136e7e7f09554bc72d0939450f5542bd4e6d2385a3bb2ed08",
+    "decision_hash": "82c153a4cc0b75992d635977f76434645533b284215b580bcc6c0f940260d25a"
+  },
+  "proof": {
+    "decision_id": "decision-synthetic-001",
+    "verified": true,
+    "checks": {
+      "evidence_hash": true,
+      "manifest": true,
+      "result": true,
+      "decision_hash": true,
+      "causal_consistency": true
+    }
+  },
+  "counterfactual": {
+    "decision_id": "decision-synthetic-001",
+    "valid_at": "2026-10-14T10:32:15.000000Z",
+    "original_knowledge_at": "2026-10-14T10:32:15.000000Z",
+    "alternate_knowledge_at": "2026-10-14T10:36:00.000000Z",
+    "original": {
+      "active_event_ids": [
+        "profile-001",
+        "tx-001"
+      ],
+      "amount_mxn": 85000,
+      "causal_gaps": [],
+      "outcome": "APPROVE",
+      "reason": "within_policy",
+      "risk_score": 15,
+      "transaction_event_id": "tx-001"
+    },
+    "alternate": {
+      "outcome": "BLOCK",
+      "reason": "risk_threshold",
+      "risk_score": 95,
+      "amount_mxn": 85000,
+      "transaction_event_id": "tx-001",
+      "causal_gaps": [],
+      "active_event_ids": [
+        "profile-001",
+        "tx-001",
+        "signal-001"
+      ]
+    },
+    "outcome_changed": true,
+    "newly_known_events": [
+      "signal-001"
+    ],
+    "no_longer_visible_events": [],
+    "alternate_evidence_hash": "46d382ea5360314da019f189c2a22421df3f71968c7608def7a254825b80fef9",
+    "side_effects_executed": 0
+  }
+}

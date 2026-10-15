@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fluss-causal-ai-lab"
+version = "0.1.0"
+description = "Bitemporal AI decision evidence and counterfactual research lab with Apache Fluss bridge"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [{name = "Causal AI Lab Contributors"}]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.8"]
+fluss = ["pyfluss>=1.0,<2", "pyarrow>=17"]
+api = ["fastapi>=0.110", "uvicorn>=0.29"]
+
+[project.scripts]
+causal-lab = "causal_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
